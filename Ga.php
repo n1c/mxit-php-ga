@@ -42,7 +42,17 @@ class Ga {
         else
             $user_agent = "";
 
-        exec('curl --user-agent "' . $user_agent . '" --header "Accept-Language: ' . $_SERVER["HTTP_ACCEPT_LANGUAGE"] . '" "' . $utm_url . '" > /dev/null 2>&1');
+        $c = curl_init();
+
+        curl_setopt($c, CURLOPT_URL, $utm_url);
+        curl_setopt($c, CURLOPT_USERAGENT, $user_agent);
+        curl_setopt($c, CURLOPT_HTTPHEADER, array('Accept-Language: '.$_SERVER["HTTP_ACCEPT_LANGUAGE"]));
+
+        $result = curl_exec($c);
+        $status = curl_getinfo($c, CURLINFO_HTTP_CODE);
+
+        curl_close($c);
+
     } // hit
 
 } // Ga
